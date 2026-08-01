@@ -1,0 +1,35 @@
+name: Pop Culture Bot - News
+
+on:
+  schedule:
+    - cron: '0 6 * * *'    # 06:00 UTC = 03:00 Brasilia
+    - cron: '0 12 * * *'   # 12:00 UTC = 09:00 Brasilia
+    - cron: '0 18 * * *'   # 18:00 UTC = 15:00 Brasilia
+    - cron: '0 0 * * *'    # 00:00 UTC = 21:00 Brasilia
+  workflow_dispatch:
+
+jobs:
+  postar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install feedparser requests groq google-api-python-client google-auth-oauthlib google-auth
+      - run: python cultura_pop_novidades.py
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          BLOGGER_ID_POP: ${{ secrets.BLOGGER_ID_POP }}
+          BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
+          BLOGGER_CLIENT_SECRET: ${{ secrets.BLOGGER_CLIENT_SECRET }}
+          BLOGGER_REFRESH_TOKEN: ${{ secrets.BLOGGER_REFRESH_TOKEN }}
+          POLLINATIONS_TOKEN: ${{ secrets.POLLINATIONS_TOKEN }}  # optional
+          IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
+      - name: Save history
+        run: |
+          git config user.name "Pop Culture Bot"
+          git config user.email "bot@example.com"
+          git add historico_pop_novidades.txt || true
+          git commit -m "Update history" || true
+          git push || true
