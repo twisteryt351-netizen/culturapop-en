@@ -28,7 +28,7 @@ for nome, valor in [
         raise ValueError(f"Faltou configurar a variavel/segredo: {nome}")
 
 groq_client = Groq(api_key=GROQ_API_KEY)
-MODELO_IA = "llama-3.3-70b-versatile"
+MODELO_IA = "openai/gpt-oss-120b"
 
 # --- GERACAO DE IMAGENS COM IA (Pollinations.ai) ---
 # Opcional: se nao configurado, ou se qualquer etapa falhar, o script cai
